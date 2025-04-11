@@ -88,5 +88,70 @@ Abrir el archivo solucion_puzzle1.txt que se encuentra en la carpeta del  reposi
 
 Referencia
 https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/examples/dancing/package-summary.html
+#Contar Palabras
+En este ejemplo contaremos palabras de un archivo de texto.
 
+Descargar un script de ejemplo MapReduce
+Usaremos un archivo .jar que contiene las clases necesarias para ejecutar el algoritmo MapReduce. 
+
+Esto se puede hacer manualmente, compilando los archivos .java. Sin embargo, para este tutorial, descargaremos el archivo .jar listo para usar.
+
+Ir a https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-mapreduce-examples/2.7.1/
+
+Descargue el archivo con nombre hadoop-mapreduce-examples-2.7.1-sources.jar 
+
+Mueva el archivo hadoop-mapreduce-examples-2.7.1-sources.jar a la misma carpeta donde esta el repositorio docker-hadoop.
+#Archivo txt para procesar
+Mueva el archivo llaneros.txt la misma carpeta donde esta el repositorio docker-hadoop.
+#Copiar los archivos .jar y .txt al contenedor
+Para mover el archivo hadoop-mapreduce-examples-2.7.1-sources.jar ejecute
+
+docker cp hadoop-mapreduce-examples-2.7.1-sources.jar namenode:/tmp
+Haga lo mismo para el archivo llaneros.txt
+docker cp llaneros.txt namenode:/tmp 
+#Crea la carpeta de entrada dentro del contenedor namenode
+Ingrese al contenedor namenode ejecutando 
+
+docker exec -it namenode bash
+
+Luego ejecute: 
+
+hdfs dfs -mkdir /user/root/input_contador
+#Copie su archivo .txt a HDFS
+Primero ejecute: 
+
+cd /tmp 
+
+Después: dfs dfs -put  llaneros.txt user/root/input_contador
+#Ejecutar MapReduce
+Ejecutar
+
+hadoop jar hadoop-mapreduce-examples-2.7.1-sources.jar org.apache.hadoop.examples.WordCount input_contador output_contador
+# resultado es una entrada grande, pero si has realizado correctamente los pasos anteriores, todo debería estar bien.
+
+Ver los resultados
+Ejecutar: 
+
+hdfs dfs -cat /user/root/output_contador/*
+Puedes comprobar los resultados accediendo a la carpeta de salida: 
+
+hdfs dfs -ls /user/root/output_contador
+Nos interesa el archivo part-r-00000, que contiene nuestro recuento de palabras. Podemos exportarlo, colocándolo en un archivo .txt y movierlo a nuestra carpeta base.
+
+Para lo anterior debemos ejecutar
+
+hdfs dfs -cat /user/root/output_contador/part-r-00000 > /tmp/llaneros.txt
+Después ejecutamos:
+
+ exit
+
+Por último: 
+
+docker cp namenode:/tmp/llaneros.txt
+Ahora el archivo de texto esta en la carpeta del  repositorio docker-hadoop.
+#Ver los resultados
+Abrir el archivo quijote_wc.txt que se encuentra en la carpeta del  repositorio docker-hadoop.
+
+Referencia
+https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html
 
