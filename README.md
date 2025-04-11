@@ -47,3 +47,46 @@ Descargar un script de ejemplo MapReduce y el Archivo txt
 
 Copiar los archivos .jar y .txt al contenedor
 [docker cp hadoop-examples-0.20.205.0.jar namenode:/tmp ] y [docker cp puzzle1.dta namenode:/tmp ]
+
+#Haga lo mismo para el archivo puzzle1.dta
+
+docker cp puzzle1.dta namenode:/tmp 
+#ngrese al contenedor namenode ejecutando 
+
+docker exec -it namenode bash
+
+Primero ejecute: 
+
+cd /tmp 
+
+Ejecutar
+
+hadoop jar hadoop-examples-0.20.205.0.jar sudoku puzzle1.dta
+
+Lo anterior es una sola una línea de comando
+El resultado es una entrada grande, pero si has realizado correctamente los pasos anteriores, todo debería estar bien.
+
+#Ver los resultados
+Ejecutar: 
+
+hadoop jar hadoop-examples-0.20.205.0.jar sudoku puzzle1.dta > solucion_puzzle1.txt 
+
+Después ejecutamos:
+
+ exit
+
+Por último: 
+
+docker cp namenode:/tmp/solucion_puzzle1.txt .
+
+Ahora el archivo de texto esta en la carpeta del  repositorio docker-hadoop.
+
+Recuerde que el comando anterior lleva un punto al final
+
+Ver los resultados
+Abrir el archivo solucion_puzzle1.txt que se encuentra en la carpeta del  repositorio docker-hadoop.
+
+Referencia
+https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/examples/dancing/package-summary.html
+
+
